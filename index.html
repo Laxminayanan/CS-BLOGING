@@ -1,117 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>CSE Blogging – Home</title>
+  <head>
+    <meta charset="UTF-8" />
+    <title>CSE Blogging – Home</title>
 
-<!-- ======= BASIC STYLING & UI ======= -->
-<style>
-    body {
+    <style>
+      body {
         margin: 0;
         padding: 0;
         font-family: "Segoe UI", Arial, sans-serif;
-        background: #eef1f7;
-    }
+        background: #0a0a0a;
+        color: #ffffff;
+        overflow-x: hidden;
+      }
 
-    header {
+      #binary-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 0.65; /* faint cinematic look */
+        background: #000;
+      }
+
+      header {
         padding: 40px 20px;
-        background: linear-gradient(135deg, #0052d4, #4364f7, #6fb1fc);
-        color: white;
+        background: #000;
         text-align: center;
-        box-shadow: 0px 3px 8px rgba(0,0,0,0.2);
-    }
+        border-bottom: 2px solid #ffcc00;
+        box-shadow: 0px 0px 25px rgba(255, 204, 0, 0.2);
+        position: relative;
+        z-index: 1;
+      }
 
-    h1 {
+      header h1 {
         margin: 0;
-        font-size: 42px;
-    }
+        font-size: 48px;
+        font-weight: 700;
+        color: #ffcc00;
+        letter-spacing: 1px;
+      }
 
-    .container {
+      header p {
+        margin-top: 10px;
+        font-size: 18px;
+        color: #ffffff;
+        opacity: 0.85;
+      }
+
+      .container {
         width: 90%;
-        max-width: 900px;
+        max-width: 950px;
         margin: 40px auto;
-    }
+        position: relative;
+        z-index: 2;
+      }
 
-    .category {
-        background: white;
+      .category {
+        background: #111;
         padding: 25px;
-        border-radius: 15px;
+        border-radius: 14px;
         margin-bottom: 30px;
-        box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
-    }
+        border: 1px solid #222;
+        box-shadow: 0px 0px 20px rgba(255, 204, 0, 0.05);
+      }
 
-    .category h2 {
+      .category h2 {
         margin-top: 0;
-        font-size: 26px;
-        color: #333;
-        border-left: 5px solid #0078ff;
-        padding-left: 10px;
-    }
+        font-size: 28px;
+        color: #ffcc00;
+        border-left: 5px solid #ffcc00;
+        padding-left: 12px;
+      }
 
-    .links a {
+      .links a {
         display: block;
         font-size: 20px;
-        padding: 10px 15px;
-        margin: 10px 0;
+        padding: 12px 18px;
+        margin: 12px 0;
         text-decoration: none;
-        color: #0052d4;
-        background: #f3f7ff;
+
+        color: #ffffff;
+        background: #0f0f0f;
         border-radius: 10px;
-        transition: 0.2s;
-        border: 1px solid #d9e6ff;
-    }
 
-    .links a:hover {
-        background: #0052d4;
-        color: white;
-        transform: translateX(5px);
-    }
+        border: 1px solid #2a2a2a;
+        transition: 0.25s;
+      }
 
-</style>
-</head>
-<body>
+      .links a:hover {
+        background: #1a1a1a;
+        color: #00aaff;
+        transform: translateX(6px);
+        box-shadow: 0px 0px 12px rgba(0, 170, 255, 0.6);
+        border-color: #00aaff;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="binary-canvas"></canvas>
 
-<header>
-    <h1>📘 CSE Concepts</h1>
-    <p>A Clean & Simple Static Website For Posts On Different Computer Science Concepts!</p>
-</header>
+    <!-- HEADER -->
+    <header>
+      <h1>CSE 👨‍💻 Concepts</h1>
+      <p>
+        <b
+          >A Clean & Simple Static Website For Posts On Different Computer
+          Science Concepts!</b
+        >
+      </p>
+    </header>
 
-<div class="container">
-
-    <!-- ================= PROGRAMMING ================= -->
-    <div class="category">
+    <div class="container">
+      <!-- PROGRAMMING -->
+      <div class="category">
         <h2>Programming</h2>
         <div class="links">
-
-            <!-- These links match your folder structure exactly -->
-            <a href="Programming/C/c.html">C</a>
-            <a href="Programming/CPP/cpp.html">C++</a>
-            <a href="Programming/Java/java.html">Java</a>
-            <a href="Programming/Python/python.html">Python</a>
-            <a href="Programming/Rust/rust.html">Rust</a>
-            <a href="Programming/Zig/zig.html">Zig</a>
-
+          <a href="Programming/C/c.html"><b>C</b></a>
+          <a href="Programming/CPP/cpp.html"><b>C++</b></a>
+          <a href="Programming/Java/java.html"><b>Java</b></a>
+          <a href="Programming/Python/python.html"><b>Python</b></a>
+          <a href="Programming/Rust/rust.html"><b>Rust</b></a>
+          <a href="Programming/Zig/zig.html"><b>Zig</b></a>
         </div>
-    </div>
+      </div>
 
-
-    <!-- ================= CORE SUBJECTS ================= -->
-    <div class="category">
+      <!-- CORE SUBJECTS -->
+      <div class="category">
         <h2>Core Subjects</h2>
         <div class="links">
-
-            <a href="Core-Subjects/OS/os.html">Operating Systems</a>
-            <a href="Core-Subjects/TOC/toc.html">Theory Of Computation</a>
-            <a href="Core-Subjects/Algorithms/algorithms.html">Algorithms</a>
-            <a href="Core-Subjects/Data-Structures/ds.html">Data Structures</a>
-            <a href="Core-Subjects/Compiler-Design/cd.html">Compiler Design</a>
-            <a href="Core-Subjects/COA/coa.html">Computer Organization & Architecture</a>
-
+          <a href="Core-Subjects/OS/os.html"><b>Operating Systems</b></a>
+          <a href="Core-Subjects/TOC/toc.html"><b>Theory of Computation</b></a>
+          <a href="Core-Subjects/Algorithms/algorithms.html"
+            ><b>Algorithms</b></a
+          >
+          <a href="Core-Subjects/Data-Structures/ds.html"
+            ><b>Data Structures</b></a
+          >
+          <a href="Core-Subjects/Compiler-Design/cd.html"
+            ><b>Compiler Design</b></a
+          >
+          <a href="Core-Subjects/COA/coa.html"
+            ><b>Computer Organization & Architecture</b></a
+          >
         </div>
+      </div>
     </div>
 
-</div>
+    <script>
+      const canvas = document.getElementById("binary-canvas");
+      const ctx = canvas.getContext("2d");
 
-</body>
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const binary = "01";
+      const fontSize = 18;
+      const columns = canvas.width / fontSize;
+
+      let drops = [];
+      for (let i = 0; i < columns; i++) {
+        drops[i] = 1;
+      }
+
+      function draw() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.09)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "#ff0000"; // Red color
+
+        ctx.font = fontSize + "px monospace";
+
+        for (let i = 0; i < drops.length; i++) {
+          const text = binary.charAt(Math.floor(Math.random() * binary.length));
+          ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+          if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+          drops[i]++;
+        }
+      }
+
+      setInterval(draw, 50);
+
+      window.addEventListener("resize", () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+    </script>
+  </body>
 </html>
-
