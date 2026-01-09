@@ -34,7 +34,35 @@
         font-weight: bold;
         color: #b50000;
       }
+
+      .copy-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #333;
+        color: #fff;
+        padding: 5px 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+      .code-container {
+        position: relative;
+      }
     </style>
+
+    <!-- Prism.js CSS for syntax highlighting -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Prism.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+
+    <!-- Prism.js C language support -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
   </head>
   <body>
     <h1>
@@ -82,8 +110,12 @@
       Let's walk through a simple example to demonstrate what happens when we
       don't handle newline characters properly:
     </p>
-    <pre><code>
 
+    <div class="code-container">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><code class="language-c">
+
+#include&lt;stdio.h&gt;
 int main() {
     char character;
     printf("Enter a character: ");
@@ -92,7 +124,7 @@ int main() {
     return 0;
 }
     </code></pre>
-
+    </div>
     <h3>What Happens Here?</h3>
     <ol>
       <li><strong>User types `H` and presses Enter</strong>.</li>
@@ -112,8 +144,10 @@ int main() {
     </ol>
 
     <h3>Let's Modify the Code to Read Another Character:</h3>
-    <pre><code>
-
+    <div class="code-container">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><code class="language-c">
+#include&lt;stdio.h&gt;
 int main() {
     char character;
     printf("Enter a character: ");
@@ -127,7 +161,7 @@ int main() {
     return 0;
 }
     </code></pre>
-
+    </div>
     <h3>What Happens Now?</h3>
     <p>
       1. You run the program, type <code>H</code>, and press
@@ -211,9 +245,11 @@ You entered: '
     </p>
 
     <h4>Updated Code with the Fix:</h4>
-    <pre><code>
+    <div class="code-container">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><code class="language-c">
 
-
+#include&lt;stdio.h&gt;
 int main() {
     char character;
     printf("Enter a character: ");
@@ -226,8 +262,8 @@ int main() {
     printf("You entered: '%c'\n", character);
     return 0;
 }
-    </code></pre>
-
+</code></pre>
+    </div>
     <h3>What Happens Now?</h3>
     <ol>
       <li>
@@ -286,5 +322,14 @@ You entered: 'E' </code></pre>
       handling input properly is a critical skill in C programming, and this
       small change in how we use <code>scanf</code> can save hours of debugging.
     </p>
+    <script>
+      function copyCode(button) {
+        const code = button.nextElementSibling.innerText.trim();
+        navigator.clipboard.writeText(code).then(() => {
+          button.innerText = "Copied!";
+          setTimeout(() => (button.innerText = "Copy"), 1500);
+        });
+      }
+    </script>
   </body>
 </html>
