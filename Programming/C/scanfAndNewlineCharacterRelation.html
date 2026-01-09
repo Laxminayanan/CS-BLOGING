@@ -1,64 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Understanding Input Handling Issues in C</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 20px;
-        }
-        h1, h2, h3 {
-            color: #333;
-        }
-        code {
-            background-color: #f4f4f4;
-            padding: 10px;
-            border-radius: 4px;
-            font-family: 'Courier New', Courier, monospace;
-        }
-        pre {
-            background-color: #f4f4f4;
-            padding: 20px;
-            border-radius: 4px;
-            overflow-x: auto;
-        }
-        p {
-            margin-bottom: 20px;
-        }
-        .important {
-            font-weight: bold;
-            color: #b50000;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 20px;
+      }
+      h1,
+      h2,
+      h3 {
+        color: #333;
+      }
+      code {
+        background-color: #f4f4f4;
+        padding: 10px;
+        border-radius: 4px;
+        font-family: "Courier New", Courier, monospace;
+      }
+      pre {
+        background-color: #f4f4f4;
+        padding: 20px;
+        border-radius: 4px;
+        overflow-x: auto;
+      }
+      p {
+        margin-bottom: 20px;
+      }
+      .important {
+        font-weight: bold;
+        color: #b50000;
+      }
     </style>
-</head>
-<body>
-    <h1>Understanding Input Handling Issues in C: The Newline Problem with <code>scanf("%c")</code></h1>
+  </head>
+  <body>
+    <h1>
+      Understanding Input Handling Issues in C: The Newline Problem with
+      <code>scanf("%c")</code>
+    </h1>
 
     <h2>Introduction</h2>
     <p>
-        In C programming, input handling can be tricky, especially when using functions like <code>scanf()</code>. One of the most common pitfalls occurs when reading a single character using the format specifier <code>%c</code>. While it seems simple, <span class="important">handling newline characters (<code>\n</code>) left in the input buffer</span> can lead to unexpected behavior.
+      In C programming, input handling can be tricky, especially when using
+      functions like <code>scanf()</code>. One of the most common pitfalls
+      occurs when reading a single character using the format specifier
+      <code>%c</code>. While it seems simple,
+      <span class="important"
+        >handling newline characters (<code>\n</code>) left in the input
+        buffer</span
+      >
+      can lead to unexpected behavior.
     </p>
     <p>
-        Let's explore this problem in detail, with a practical example, and see how it can be resolved. By the end of this documentation, you’ll understand how to avoid this frustrating issue in your own C programs.
+      Let's explore this problem in detail, with a practical example, and see
+      how it can be resolved. By the end of this documentation, you’ll
+      understand how to avoid this frustrating issue in your own C programs.
     </p>
 
     <h2>The Problem: How <code>scanf("%c", &character)</code> Reads Input</h2>
     <p>
-        In C, when you use <code>scanf("%c", &character)</code> to read a single character, it doesn't just read letters, but <strong>reads every character</strong> from the input buffer, including spaces, tabs, and newlines (<code>\n</code>).
+      In C, when you use <code>scanf("%c", &character)</code> to read a single
+      character, it doesn't just read letters, but
+      <strong>reads every character</strong> from the input buffer, including
+      spaces, tabs, and newlines (<code>\n</code>).
     </p>
     <p>
-        This can become problematic if you are reading multiple characters in sequence because <strong>newline characters</strong> (<code>\n</code>), which are left behind after the user presses the <strong>Enter</strong> key, can unexpectedly get read by the next <code>scanf("%c", &character)</code>.
+      This can become problematic if you are reading multiple characters in
+      sequence because <strong>newline characters</strong> (<code>\n</code>),
+      which are left behind after the user presses the
+      <strong>Enter</strong> key, can unexpectedly get read by the next
+      <code>scanf("%c", &character)</code>.
     </p>
 
-    <h3>Example: The Default Behavior of <code>scanf("%c", &character)</code></h3>
+    <h3>
+      Example: The Default Behavior of <code>scanf("%c", &character)</code>
+    </h3>
     <p>
-        Let's walk through a simple example to demonstrate what happens when we don't handle newline characters properly:
+      Let's walk through a simple example to demonstrate what happens when we
+      don't handle newline characters properly:
     </p>
     <pre><code>
-#include <stdio.h>
 
 int main() {
     char character;
@@ -71,16 +95,24 @@ int main() {
 
     <h3>What Happens Here?</h3>
     <ol>
-        <li><strong>User types `H` and presses Enter</strong>.</li>
-        <li>The <code>scanf("%c", &character)</code> reads the first character <code>H</code> and stores it.</li>
-        <li>It then prints <code>You entered: 'H'</code>.</li>
-        <li><strong>User presses Enter</strong> (which generates a newline character <code>\n</code>).</li>
-        <li>This <strong>newline character</strong> stays in the input buffer, <strong>unnoticed</strong>.</li>
+      <li><strong>User types `H` and presses Enter</strong>.</li>
+      <li>
+        The <code>scanf("%c", &character)</code> reads the first character
+        <code>H</code> and stores it.
+      </li>
+      <li>It then prints <code>You entered: 'H'</code>.</li>
+      <li>
+        <strong>User presses Enter</strong> (which generates a newline character
+        <code>\n</code>).
+      </li>
+      <li>
+        This <strong>newline character</strong> stays in the input buffer,
+        <strong>unnoticed</strong>.
+      </li>
     </ol>
 
     <h3>Let's Modify the Code to Read Another Character:</h3>
     <pre><code>
-#include <stdio.h>
 
 int main() {
     char character;
@@ -98,17 +130,27 @@ int main() {
 
     <h3>What Happens Now?</h3>
     <p>
-        1. You run the program, type <code>H</code>, and press <strong>Enter</strong>.
+      1. You run the program, type <code>H</code>, and press
+      <strong>Enter</strong>.
     </p>
     <p>
-        The first <code>scanf("%c", &character)</code> successfully reads <code>H</code> and prints it.
+      The first <code>scanf("%c", &character)</code> successfully reads
+      <code>H</code> and prints it.
     </p>
-    <p>
-        2. But here's the <strong>unexpected behavior</strong>:
-    </p>
+    <p>2. But here's the <strong>unexpected behavior</strong>:</p>
     <ol>
-        <li><strong>The newline character (<code>\n</code>)</strong> left in the input buffer after pressing <strong>Enter</strong> is still there.</li>
-        <li>The second <code>scanf("%c", &character)</code> <strong>doesn’t wait for a new character</strong>. Instead, it <strong>immediately reads the leftover newline (<code>\n</code>)</strong> from the buffer.</li>
+      <li>
+        <strong>The newline character (<code>\n</code>)</strong> left in the
+        input buffer after pressing <strong>Enter</strong> is still there.
+      </li>
+      <li>
+        The second <code>scanf("%c", &character)</code>
+        <strong>doesn’t wait for a new character</strong>. Instead, it
+        <strong
+          >immediately reads the leftover newline (<code>\n</code>)</strong
+        >
+        from the buffer.
+      </li>
     </ol>
 
     <h3>Output Example:</h3>
@@ -122,37 +164,55 @@ You entered: '
 
     <h2>Why Does This Problem Occur?</h2>
     <p>
-        The issue occurs because <code>scanf("%c", &character)</code> reads <strong>all characters</strong>—including whitespace characters like spaces, tabs, and newlines.
+      The issue occurs because <code>scanf("%c", &character)</code> reads
+      <strong>all characters</strong>—including whitespace characters like
+      spaces, tabs, and newlines.
     </p>
     <p>
-        When you press <strong>Enter</strong>, it generates a newline (<code>\n</code>) and that newline character is <strong>left in the input buffer</strong>. The next time you call <code>scanf("%c", &character)</code>, it will <strong>immediately consume</strong> that leftover newline (<code>\n</code>) instead of waiting for the next user input.
+      When you press <strong>Enter</strong>, it generates a newline
+      (<code>\n</code>) and that newline character is
+      <strong>left in the input buffer</strong>. The next time you call
+      <code>scanf("%c", &character)</code>, it will
+      <strong>immediately consume</strong> that leftover newline
+      (<code>\n</code>) instead of waiting for the next user input.
     </p>
 
     <h3>The Root Cause: The Input Buffer</h3>
-    <p>
-        When you press <strong>Enter</strong>, the input buffer contains:
-    </p>
+    <p>When you press <strong>Enter</strong>, the input buffer contains:</p>
     <ol>
-        <li>The character you typed (e.g., <code>H</code>).</li>
-        <li>The <strong>newline character</strong> (<code>\n</code>) that is automatically generated when you press Enter.</li>
+      <li>The character you typed (e.g., <code>H</code>).</li>
+      <li>
+        The <strong>newline character</strong> (<code>\n</code>) that is
+        automatically generated when you press Enter.
+      </li>
     </ol>
     <p>
-        <code>scanf("%c", &character)</code> consumes the <strong>first character</strong> (<code>H</code>) correctly, but the <strong>newline</strong> character (<code>\n</code>) remains in the buffer. The next <code>scanf("%c", &character)</code> immediately picks up that newline, not the new character the user is supposed to type.
+      <code>scanf("%c", &character)</code> consumes the
+      <strong>first character</strong> (<code>H</code>) correctly, but the
+      <strong>newline</strong> character (<code>\n</code>) remains in the
+      buffer. The next <code>scanf("%c", &character)</code> immediately picks up
+      that newline, not the new character the user is supposed to type.
     </p>
 
     <h2>The Solution: Skipping Newline Characters</h2>
     <p>
-        To solve this problem, we can modify our <code>scanf</code> call to <strong>skip any leading whitespace</strong>, including newlines, before reading the actual character.
+      To solve this problem, we can modify our <code>scanf</code> call to
+      <strong>skip any leading whitespace</strong>, including newlines, before
+      reading the actual character.
     </p>
 
     <h3>Fix: Using <code>" %c"</code> in <code>scanf</code></h3>
     <p>
-        The solution is simple: <strong>add a space before <code>%c</code></strong> in the <code>scanf</code> format string. This tells <code>scanf</code> to <strong>skip over any leading whitespace characters</strong> (including newlines, spaces, and tabs) before reading the next character.
+      The solution is simple:
+      <strong>add a space before <code>%c</code></strong> in the
+      <code>scanf</code> format string. This tells <code>scanf</code> to
+      <strong>skip over any leading whitespace characters</strong> (including
+      newlines, spaces, and tabs) before reading the next character.
     </p>
 
     <h4>Updated Code with the Fix:</h4>
     <pre><code>
-#include <stdio.h>
+
 
 int main() {
     char character;
@@ -170,19 +230,29 @@ int main() {
 
     <h3>What Happens Now?</h3>
     <ol>
-        <li>You run the program and type <code>H</code>, then press <strong>Enter</strong>.</li>
-        <li>The first <code>scanf("%c", &character)</code> reads <code>H</code> and prints it.</li>
-        <li>When you type <code>E</code> and press <strong>Enter</strong> again:
-            <ul>
-                <li>The second <code>scanf(" %c", &character)</code> skips over the leftover
-```
+      <li>
+        You run the program and type <code>H</code>, then press
+        <strong>Enter</strong>.
+      </li>
+      <li>
+        The first <code>scanf("%c", &character)</code> reads <code>H</code> and
+        prints it.
+      </li>
+      <li>
+        When you type <code>E</code> and press <strong>Enter</strong> again:
+        <ul>
+          <li>
+            The second <code>scanf(" %c", &character)</code> skips over the
+            leftover newline (<code>\n</code>) in the input buffer and
+            <strong>waits for you to type another character</strong>.
+          </li>
+          <li>It correctly reads the <code>E</code> that you type next.</li>
+        </ul>
+      </li>
+    </ol>
 
-
-newline (<code>\n</code>) in the input buffer and <strong>waits for you to type another character</strong>.</li> <li>It correctly reads the <code>E</code> that you type next.</li> </ul> </li> </ol>
-
-
-<h3>Output Example:</h3>
-<pre><code>
+    <h3>Output Example:</h3>
+    <pre><code>
 
 
 Enter a character: H
@@ -190,17 +260,31 @@ You entered: 'H'
 Enter another character: E
 You entered: 'E' </code></pre>
 
-<h2>Key Takeaways</h2>
-<ul>
-    <li><strong>Problem:</strong> After pressing Enter, the newline character (<code>\n</code>) stays in the input buffer, causing subsequent <code>scanf("%c", &character)</code> calls to immediately consume that newline instead of waiting for user input.</li>
-    <li><strong>Solution:</strong> Use <code>" %c"</code> instead of <code>%c</code> in <code>scanf</code>. The <strong>leading space</strong> before <code>%c</code> tells <code>scanf</code> to <strong>ignore any whitespace characters</strong>, including newlines, before reading the next non-whitespace character.</li>
-</ul>
+    <h2>Key Takeaways</h2>
+    <ul>
+      <li>
+        <strong>Problem:</strong> After pressing Enter, the newline character
+        (<code>\n</code>) stays in the input buffer, causing subsequent
+        <code>scanf("%c", &character)</code> calls to immediately consume that
+        newline instead of waiting for user input.
+      </li>
+      <li>
+        <strong>Solution:</strong> Use <code>" %c"</code> instead of
+        <code>%c</code> in <code>scanf</code>. The
+        <strong>leading space</strong> before <code>%c</code> tells
+        <code>scanf</code> to <strong>ignore any whitespace characters</strong>,
+        including newlines, before reading the next non-whitespace character.
+      </li>
+    </ul>
 
-<h3>Why This Is Important</h3>
-<p>
-    This issue may seem trivial at first, but it can cause unexpected results in programs that take user input, especially in loops or when you are processing multiple characters or strings. If left unchecked, it can lead to confusing bugs and frustrating user experiences. Understanding and handling input properly is a critical skill in C programming, and this small change in how we use <code>scanf</code> can save hours of debugging.
-</p>
-
-</body>
+    <h3>Why This Is Important</h3>
+    <p>
+      This issue may seem trivial at first, but it can cause unexpected results
+      in programs that take user input, especially in loops or when you are
+      processing multiple characters or strings. If left unchecked, it can lead
+      to confusing bugs and frustrating user experiences. Understanding and
+      handling input properly is a critical skill in C programming, and this
+      small change in how we use <code>scanf</code> can save hours of debugging.
+    </p>
+  </body>
 </html>
-
