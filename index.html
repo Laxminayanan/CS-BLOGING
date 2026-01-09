@@ -1,1 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CSE Blogging – Home</title>
+
+<!-- ======= BASIC STYLING & UI ======= -->
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #eef1f7;
+    }
+
+    header {
+        padding: 40px 20px;
+        background: linear-gradient(135deg, #0052d4, #4364f7, #6fb1fc);
+        color: white;
+        text-align: center;
+        box-shadow: 0px 3px 8px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+        margin: 0;
+        font-size: 42px;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 900px;
+        margin: 40px auto;
+    }
+
+    .category {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .category h2 {
+        margin-top: 0;
+        font-size: 26px;
+        color: #333;
+        border-left: 5px solid #0078ff;
+        padding-left: 10px;
+    }
+
+    .links a {
+        display: block;
+        font-size: 20px;
+        padding: 10px 15px;
+        margin: 10px 0;
+        text-decoration: none;
+        color: #0052d4;
+        background: #f3f7ff;
+        border-radius: 10px;
+        transition: 0.2s;
+        border: 1px solid #d9e6ff;
+    }
+
+    .links a:hover {
+        background: #0052d4;
+        color: white;
+        transform: translateX(5px);
+    }
+
+</style>
+</head>
+<body>
+
+<header>
+    <h1>📘 CSE Blogging Hub</h1>
+    <p>A Clean & Simple Static Website For Your Blog Posts</p>
+</header>
+
+<div class="container">
+
+    <!-- ================= PROGRAMMING ================= -->
+    <div class="category">
+        <h2>Programming</h2>
+        <div class="links">
+
+            <!-- These links match your folder structure exactly -->
+            <a href="Programming/C/c.html">C</a>
+            <a href="Programming/CPP/cpp.html">C++</a>
+            <a href="Programming/Java/java.html">Java</a>
+            <a href="Programming/Python/python.html">Python</a>
+            <a href="Programming/Rust/rust.html">Rust</a>
+            <a href="Programming/Zig/zig.html">Zig</a>
+
+        </div>
+    </div>
+
+
+    <!-- ================= CORE SUBJECTS ================= -->
+    <div class="category">
+        <h2>Core Subjects</h2>
+        <div class="links">
+
+            <a href="Core-Subjects/OS/os.html">Operating Systems</a>
+            <a href="Core-Subjects/TOC/toc.html">Theory Of Computation</a>
+            <a href="Core-Subjects/Algorithms/algorithms.html">Algorithms</a>
+            <a href="Core-Subjects/Data-Structures/ds.html">Data Structures</a>
+            <a href="Core-Subjects/Compiler-Design/cd.html">Compiler Design</a>
+            <a href="Core-Subjects/COA/coa.html">Computer Organization & Architecture</a>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
 
