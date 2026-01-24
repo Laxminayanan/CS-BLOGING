@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Understanding Call by Value and const Parameters in C</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.7;
+        margin: 20px;
+        color: #222;
+      }
+
+      h1, h2, h3 {
+        color: #333;
+      }
+
+      code {
+        background-color: #f4f4f4;
+        padding: 4px 6px;
+        border-radius: 4px;
+        font-family: "Courier New", Courier, monospace;
+      }
+
+      pre {
+        background-color: #f4f4f4;
+        padding: 16px;
+        border-radius: 6px;
+        overflow-x: auto;
+      }
+
+      .important {
+        font-weight: bold;
+        color: #b50000;
+      }
+
+      .note {
+        background-color: #fff7e6;
+        padding: 12px;
+        border-left: 5px solid #ffa500;
+        margin: 20px 0;
+      }
+
+      .code-container {
+        position: relative;
+      }
+
+      .copy-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #333;
+        color: #fff;
+        padding: 5px 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Understanding Call by Value and <code>const</code> Parameters in C</h1>
+
+    <h2>Introduction</h2>
+    <p>
+      When beginners start learning C, one of the first confusing moments comes
+      when a variable passed to a function does <strong>not change</strong>,
+      even though it looks like it should.
+    </p>
+    <p>
+      This confusion becomes even stronger when we introduce
+      <code>const</code> into function parameters. Many students assume that
+      <code>const</code> has something to do with how data is passed between
+      functions.  
+      <span class="important">It does not.</span>
+    </p>
+
+    <p>
+      In this article, we will build the concept <strong>from scratch</strong>:
+      how function calls work in C, what <em>call by value</em> actually means,
+      and what real difference exists between normal parameters and
+      <code>const</code> parameters.
+    </p>
+
+    <h2>Example 1: Normal Parameter</h2>
+
+    <div class="code-container">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+
+void foo(char character) {
+    character = 'B';
+}
+
+int main(void) {
+    char character = 'A';
+    printf("Before calling function: %c\n", character);
+    foo(character);
+    printf("After calling function: %c\n", character);
+    return 0;
+}
+      </code></pre>
+    </div>
+
+    <h3>Output</h3>
+    <pre><code>
+Before calling function: A
+After calling function: A
+    </code></pre>
+
+    <h3>What Just Happened?</h3>
+    <p>
+      At first glance, it looks like the function <code>foo()</code> should
+      change the value of <code>character</code> from <code>'A'</code> to
+      <code>'B'</code>. But it does not.
+    </p>
+
+    <p>
+      This happens because C uses <strong>call by value</strong> by default.
+    </p>
+
+    <h2>The Core Rule: Call by Value in C</h2>
+    <p class="important">
+      In C, function arguments are passed by value, not by reference.
+    </p>
+
+    <p>
+      This means:
+    </p>
+    <ul>
+      <li>The function receives a <strong>copy</strong> of the variable.</li>
+      <li>The original variable in <code>main()</code> is untouched.</li>
+      <li>Any modification happens only on the local copy.</li>
+    </ul>
+
+    <h3>Memory-Level Explanation</h3>
+    <p>
+      When <code>main()</code> runs, it creates its own variable:
+    </p>
+
+    <pre><code>
+main():
+character = 'A'
+    </code></pre>
+
+    <p>
+      When <code>foo(character)</code> is called, C creates a
+      <strong>new variable</strong> inside <code>foo()</code> and copies the
+      value:
+    </p>
+
+    <pre><code>
+foo():
+character = 'A'   // copy
+    </code></pre>
+
+    <p>
+      Changing this copy does not affect the original variable in
+      <code>main()</code>. When <code>foo()</code> finishes, its local variable
+      is destroyed.
+    </p>
+
+    <h2>Example 2: Using <code>const</code> Parameter</h2>
+
+    <div class="code-container">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+
+void foo(const char character) {
+    // character = 'B';  // ❌Not allowed
+}
+
+int main(void) {
+    char character = 'A';
+    printf("Before calling function: %c\n", character);
+    foo(character);
+    printf("After calling function: %c\n", character);
+    return 0;
+}
+      </code></pre>
+    </div>
+
+    <h3>Output</h3>
+    <pre><code>
+Before calling function: A
+After calling function: A
+    </code></pre>
+
+    <h2>What Does <code>const</code> Actually Change?</h2>
+    <p>
+      This is the most important clarification:
+    </p>
+
+    <p class="important">
+      <code>const</code> does NOT change how arguments are passed.
+    </p>
+
+    <p>
+      The parameter is still passed by value. It is still a copy.
+    </p>
+
+    <h3>Then Why Use <code>const</code>?</h3>
+    <p>
+      The keyword <code>const</code> only means one thing:
+    </p>
+
+    <p class="note">
+      “This variable must not be modified inside this function.”
+    </p>
+
+    <p>
+      It provides:
+    </p>
+    <ul>
+      <li>Safety against accidental modification</li>
+      <li>Clear intent to other programmers</li>
+      <li>Better readability and maintainability</li>
+    </ul>
+
+    <h2>Comparison Summary</h2>
+
+    <table border="1" cellpadding="8" cellspacing="0">
+      <tr>
+        <th>Parameter Type</th>
+        <th>Modifiable inside function?</th>
+        <th>Affects main() variable?</th>
+      </tr>
+      <tr>
+        <td><code>char character</code></td>
+        <td>Yes</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td><code>const char character</code></td>
+        <td>No</td>
+        <td>No</td>
+      </tr>
+    </table>
+
+    <h2>Important Insight</h2>
+    <p>
+      If you want a function to actually modify a variable from
+      <code>main()</code>, you must pass its <strong>address</strong> using
+      pointers.
+    </p>
+
+    <pre><code class="language-c">
+void foo(char *c) {
+    *c = 'B';
+}
+    </code></pre>
+
+    <p>
+      This works because the function now accesses the original memory location.
+    </p>
+
+    <h2>Final Takeaway</h2>
+    <ul>
+      <li>Normal parameters → modifiable copies</li>
+      <li><code>const</code> parameters → read-only copies</li>
+      <li>Pointers → access to original variable</li>
+    </ul>
+
+    <p>
+      Understanding this distinction is fundamental for mastering C, especially
+      when dealing with functions, arrays, structures, and system-level
+      programming.
+    </p>
+
+    <script>
+      function copyCode(button) {
+        const code = button.nextElementSibling.innerText.trim();
+        navigator.clipboard.writeText(code).then(() => {
+          button.innerText = "Copied!";
+          setTimeout(() => (button.innerText = "Copy"), 1500);
+        });
+      }
+    </script>
+  </body>
+</html>
