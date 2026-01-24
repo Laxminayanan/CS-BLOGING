@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Why C Does NOT Have Call by Reference — Only Call by Pointer</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.7;
+        margin: 20px;
+        color: #222;
+      }
+
+      h1, h2, h3 {
+        color: #333;
+      }
+
+      code {
+        background-color: #f4f4f4;
+        padding: 4px 6px;
+        border-radius: 4px;
+        font-family: "Courier New", Courier, monospace;
+      }
+
+      pre {
+        background-color: #f4f4f4;
+        padding: 16px;
+        border-radius: 6px;
+        overflow-x: auto;
+      }
+
+      .important {
+        font-weight: bold;
+        color: #b50000;
+      }
+
+      .note {
+        background-color: #fff7e6;
+        padding: 12px;
+        border-left: 5px solid #ffa500;
+        margin: 20px 0;
+      }
+
+      table {
+        border-collapse: collapse;
+        margin-top: 15px;
+      }
+
+      th, td {
+        border: 1px solid #555;
+        padding: 8px 12px;
+        text-align: left;
+      }
+
+      .code-container {
+        position: relative;
+      }
+
+      .copy-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #333;
+        color: #fff;
+        padding: 5px 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>
+      “It Is NOT Call by Reference in C — It Is Call by Pointer (Address)”
+    </h1>
+
+    <h2>Introduction</h2>
+    <p>
+      If you ask ten people how C passes variables to functions, at least five
+      of them will say:
+    </p>
+
+    <pre><code>C uses call by reference</code></pre>
+
+    <p class="important">
+      This statement is wrong.
+    </p>
+
+    <p>
+      C does <strong>not</strong> support call by reference.  
+      Not internally.  
+      Not conceptually.  
+      Not at the language level.
+    </p>
+
+    <p>
+      What C supports is:
+    </p>
+
+    <div class="note">
+      <strong>Call by value</strong> — and sometimes the value happens to be an
+      <strong>address</strong>.
+    </div>
+
+    <p>
+      This article explains the difference clearly, from scratch, and also
+      explains why this confusion exists in the first place.
+    </p>
+
+    <h2>The Fundamental Rule of C</h2>
+    <p class="important">
+      C is a pure call-by-value language.
+    </p>
+
+    <p>
+      Every argument passed to a function in C is copied.
+      This rule never breaks.
+    </p>
+
+    <h2>Step 1: Normal Call by Value</h2>
+
+    <div class="code-container">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+
+void change(int x) {
+    x = 100;
+}
+
+int main(void) {
+    int a = 10;
+    change(a);
+    printf("%d\n", a);
+    return 0;
+}
+      </code></pre>
+    </div>
+
+    <h3>Output</h3>
+    <pre><code>10</code></pre>
+
+    <p>
+      Here, <code>a</code> does not change because the function receives only a
+      <strong>copy</strong> of its value.
+    </p>
+
+    <h3>Memory View</h3>
+    <pre><code>
+main():        change():
+a = 10   -->  x = 10 (copy)
+    </code></pre>
+
+    <h2>Step 2: Passing Address Using Pointers</h2>
+    <p>
+      Now let’s modify the program using pointers.
+    </p>
+
+    <div class="code-container">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+
+void change(int *x) {
+    *x = 100;
+}
+
+int main(void) {
+    int a = 10;
+    change(&a);
+    printf("%d\n", a);
+    return 0;
+}
+      </code></pre>
+    </div>
+
+    <h3>Output</h3>
+    <pre><code>100</code></pre>
+
+    <h2>The Big Question</h2>
+    <p>
+      Since <code>a</code> changed, many people say:
+    </p>
+
+    <pre><code>This is call by reference</code></pre>
+
+    <p class="important">
+      This conclusion is incorrect.
+    </p>
+
+    <h2>What Is Actually Happening?</h2>
+    <p>
+      Let’s look at the function call:
+    </p>
+
+    <pre><code>change(&a);</code></pre>
+
+    <p>
+      The expression <code>&a</code> evaluates to the <strong>address</strong>
+      of <code>a</code>.
+    </p>
+
+    <p class="note">
+      An address is just a number.
+    </p>
+
+    <p>
+      That number is copied into the parameter <code>x</code>.
+    </p>
+
+    <h3>Memory View</h3>
+    <pre><code>
+main():                     change():
+a = 10                     x = 0x2000 (copy of address)
+address of a = 0x2000
+    </code></pre>
+
+    <p>
+      The pointer variable <code>x</code> itself is a copy.
+      Nothing magical happens.
+    </p>
+
+    <h2>Why Does Dereferencing Modify the Original Variable?</h2>
+    <p>
+      Inside the function, we write:
+    </p>
+
+    <pre><code>*x = 100;</code></pre>
+
+    <p>
+      This means:
+    </p>
+    <ul>
+      <li>Go to the memory location stored in <code>x</code></li>
+      <li>Modify the value at that location</li>
+    </ul>
+
+    <p>
+      Since that location belongs to <code>a</code>, the original variable
+      changes.
+    </p>
+
+    <div class="note">
+      The pointer is copied.  
+      The memory it points to is shared.
+    </div>
+
+    <h2>Why This Is NOT Call by Reference</h2>
+    <p>
+      In true call by reference:
+    </p>
+    <ul>
+      <li>No address passing is visible in function calls</li>
+      <li>No pointers are required</li>
+      <li>The language automatically binds the parameter to the variable</li>
+    </ul>
+
+    <h2>Example: Real Call by Reference (C++)</h2>
+
+    <pre><code class="language-cpp">
+void change(int &x) {
+    x = 100;
+}
+
+int main() {
+    int a = 10;
+    change(a);   // no &
+}
+    </code></pre>
+
+    <p>
+      Here, the function parameter <code>x</code> becomes an alias for
+      <code>a</code>.  
+      This mechanism does <strong>not exist</strong> in C.
+    </p>
+
+    <h2>Comparison Table</h2>
+
+    <table>
+      <tr>
+        <th>Language</th>
+        <th>Mechanism</th>
+        <th>How modification happens</th>
+      </tr>
+      <tr>
+        <td>C</td>
+        <td>Call by value (pointer passed)</td>
+        <td>Manual dereferencing</td>
+      </tr>
+      <tr>
+        <td>C++</td>
+        <td>Call by reference</td>
+        <td>Automatic aliasing</td>
+      </tr>
+    </table>
+
+    <h2>Why People Still Call It “Call by Reference”</h2>
+    <ul>
+      <li>Superficial behavior looks similar</li>
+      <li>Pointers are confusing initially</li>
+      <li>Simplified teaching explanations</li>
+      <li>Influence of C++ terminology</li>
+    </ul>
+
+    <p class="important">
+      But similarity in effect does not mean similarity in mechanism.
+    </p>
+
+    <h2>Final Takeaway</h2>
+    <p class="important">
+      C does NOT have call by reference.
+    </p>
+
+    <p>
+      C has only call by value.
+    </p>
+
+    <p>
+      Sometimes the value is data.  
+      Sometimes the value is an address.
+    </p>
+
+    <p>
+      Understanding this distinction is essential for mastering pointers,
+      arrays, structures, dynamic memory, and system programming in C.
+    </p>
+
+    <script>
+      function copyCode(button) {
+        const code = button.nextElementSibling.innerText.trim();
+        navigator.clipboard.writeText(code).then(() => {
+          button.innerText = "Copied!";
+          setTimeout(() => (button.innerText = "Copy"), 1500);
+        });
+      }
+    </script>
+  </body>
+</html>
