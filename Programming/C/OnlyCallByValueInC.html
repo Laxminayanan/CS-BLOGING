@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Call by Value, Addresses, and Pointers in C — The Real Truth</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.7;
+        margin: 20px;
+        color: #222;
+      }
+
+      h1, h2, h3 {
+        color: #333;
+      }
+
+      code {
+        background-color: #f4f4f4;
+        padding: 4px 6px;
+        border-radius: 4px;
+        font-family: "Courier New", Courier, monospace;
+      }
+
+      pre {
+        background-color: #f4f4f4;
+        padding: 16px;
+        border-radius: 6px;
+        overflow-x: auto;
+      }
+
+      .important {
+        font-weight: bold;
+        color: #b50000;
+      }
+
+      .note {
+        background-color: #fff7e6;
+        padding: 12px;
+        border-left: 5px solid #ffa500;
+        margin: 20px 0;
+      }
+
+      .code-container {
+        position: relative;
+      }
+
+      .copy-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #333;
+        color: #fff;
+        padding: 5px 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Call by Value in C — Even When You Pass Addresses</h1>
+
+    <h2>Introduction</h2>
+    <p>
+      One of the most misunderstood topics in C programming is how data is
+      passed to functions. Many learners believe that C supports
+      <em>call by reference</em> when pointers are used.
+    </p>
+
+    <p class="important">
+      This belief is wrong.
+    </p>
+
+    <p>
+      C supports <strong>only call by value</strong>.  
+      Even when we pass <code>&variable</code>, the argument is still passed
+      <strong>by value</strong>.
+    </p>
+
+    <p>
+      The key idea is simple but powerful:
+    </p>
+
+    <div class="note">
+      When we pass <code>&variable</code>, the <strong>value being copied</strong>
+      is an <strong>address</strong>.
+    </div>
+
+    <p>
+      This article explains this concept from absolute basics to advanced
+      understanding, using memory-level reasoning.
+    </p>
+
+    <h2>The Fundamental Rule of C</h2>
+    <p class="important">
+      C is a call-by-value language. Always.
+    </p>
+
+    <p>
+      This rule never changes — not with normal variables, not with arrays,
+      and not even with pointers.
+    </p>
+
+    <h2>Step 1: Normal Call by Value</h2>
+
+    <div class="code-container">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+
+void foo(int x) {
+    x = 20;
+}
+
+int main(void) {
+    int a = 10;
+    foo(a);
+    printf("%d\n", a);
+    return 0;
+}
+      </code></pre>
+    </div>
+
+    <h3>Output</h3>
+    <pre><code>10</code></pre>
+
+    <h3>Why?</h3>
+    <p>
+      When <code>foo(a)</code> is called, the value <code>10</code> is copied
+      into <code>x</code>.  
+      Any modification happens only to the copy.
+    </p>
+
+    <h3>Memory View</h3>
+    <pre><code>
+main():        foo():
+a = 10   -->   x = 10 (copy)
+    </code></pre>
+
+    <h2>Step 2: Passing Address Using &</h2>
+    <p>
+      Now let’s pass the address of the variable.
+    </p>
+
+    <div class="code-container">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <pre><code class="language-c">
+#include &lt;stdio.h&gt;
+
+void foo(int *x) {
+    *x = 20;
+}
+
+int main(void) {
+    int a = 10;
+    foo(&a);
+    printf("%d\n", a);
+    return 0;
+}
+      </code></pre>
+    </div>
+
+    <h3>Output</h3>
+    <pre><code>20</code></pre>
+
+    <h2>The Most Important Question</h2>
+    <p>
+      If C is call by value, then why does this work?
+    </p>
+
+    <h2>The Real Explanation (Core Insight)</h2>
+
+    <p class="important">
+      Even here, C is still doing call by value.
+    </p>
+
+    <p>
+      The difference is <strong>what value is being copied</strong>.
+    </p>
+
+    <h3>What gets passed?</h3>
+    <p>
+      When you write:
+    </p>
+
+    <pre><code>foo(&a);</code></pre>
+
+    <p>
+      The expression <code>&a</code> evaluates to an <strong>address</strong>.
+    </p>
+
+    <p class="note">
+      That address is just a number.
+    </p>
+
+    <p>
+      C copies that number into the parameter <code>x</code>.
+    </p>
+
+    <h3>Memory View</h3>
+    <pre><code>
+main():                 foo():
+a = 10                 x = 0x1000 (copy of address)
+address of a = 0x1000
+    </code></pre>
+
+    <p>
+      So <code>x</code> is a copy — but it is a copy of the
+      <strong>address</strong>.
+    </p>
+
+    <h2>Why Dereferencing Works</h2>
+    <p>
+      Inside <code>foo</code>, we write:
+    </p>
+
+    <pre><code>*x = 20;</code></pre>
+
+    <p>
+      This means:
+    </p>
+    <ul>
+      <li>Go to the address stored in <code>x</code></li>
+      <li>Modify the value at that memory location</li>
+    </ul>
+
+    <p>
+      Since the address points to <code>a</code>, the original variable changes.
+    </p>
+
+    <h2>Key Clarification</h2>
+    <div class="note">
+      The pointer variable itself is copied.  
+      The memory it points to is shared.
+    </div>
+
+    <h2>Comparison Summary</h2>
+
+    <table border="1" cellpadding="8" cellspacing="0">
+      <tr>
+        <th>What is passed</th>
+        <th>Is it copied?</th>
+        <th>Can main() be modified?</th>
+      </tr>
+      <tr>
+        <td>Normal variable</td>
+        <td>Yes</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td>Address (&variable)</td>
+        <td>Yes (address copied)</td>
+        <td>Yes (via dereferencing)</td>
+      </tr>
+    </table>
+
+    <h2>Why This Design is Powerful</h2>
+    <ul>
+      <li>Simple language model</li>
+      <li>No hidden behavior</li>
+      <li>Full control over memory</li>
+      <li>Perfect for system programming</li>
+    </ul>
+
+    <h2>Final Takeaway</h2>
+    <p class="important">
+      C never passes variables by reference.  
+      It only passes values.
+    </p>
+
+    <p>
+      Sometimes that value is data.  
+      Sometimes that value is an address.
+    </p>
+
+    <p>
+      Understanding this single idea unlocks pointers, arrays, structures,
+      dynamic memory, and operating system concepts.
+    </p>
+
+    <script>
+      function copyCode(button) {
+        const code = button.nextElementSibling.innerText.trim();
+        navigator.clipboard.writeText(code).then(() => {
+          button.innerText = "Copied!";
+          setTimeout(() => (button.innerText = "Copy"), 1500);
+        });
+      }
+    </script>
+  </body>
+</html>
